@@ -80,6 +80,9 @@ void Frame_BluetoothScan::DrawDevice(EPDGUI_Button *btn, const char *name) {
 }
 
 void Frame_BluetoothScan::UpdateDeviceList(int count) {
+    _canvas_status->fillCanvas(0);
+    _canvas_status->pushCanvas(4, 72, UPDATE_MODE_NONE);
+
     for (int i = 0; i < BT_MAX_DEVICES + 1; i++) {
         _key_device[i]->SetHide(true);
     }
@@ -119,7 +122,7 @@ void Frame_BluetoothScan::UpdateDeviceList(int count) {
         } else {
             _canvas_status->drawString("No devices found", 266, 30);
         }
-        _canvas_status->pushCanvas(4, 40, UPDATE_MODE_GL16);
+        _canvas_status->pushCanvas(4, 72, UPDATE_MODE_GL16);
     }
 }
 
@@ -146,7 +149,7 @@ int Frame_BluetoothScan::init(epdgui_args_vector_t &args) {
     } else {
         _canvas_status->drawString("Scanning...", 266, 30);
     }
-    _canvas_status->pushCanvas(4, 40, UPDATE_MODE_NONE);
+    _canvas_status->pushCanvas(4, 72, UPDATE_MODE_NONE);
     M5.EPD.UpdateFull(UPDATE_MODE_GC16);
 
     g_ble_scan_result = -1;
@@ -170,7 +173,7 @@ int Frame_BluetoothScan::run() {
         } else {
             _canvas_status->drawString("Scanning...", 266, 30);
         }
-        _canvas_status->pushCanvas(4, 40, UPDATE_MODE_GL16);
+        _canvas_status->pushCanvas(4, 72, UPDATE_MODE_GL16);
         g_ble_scan_result = -1;
         BLEClient_request_scan();
         _scanning = true;
@@ -187,7 +190,7 @@ int Frame_BluetoothScan::run() {
         } else {
             _canvas_status->drawString("Connecting...", 266, 30);
         }
-        _canvas_status->pushCanvas(4, 40, UPDATE_MODE_GL16);
+        _canvas_status->pushCanvas(4, 72, UPDATE_MODE_GL16);
         BLEClient_request_connect(idx);
     }
 
@@ -199,7 +202,7 @@ int Frame_BluetoothScan::run() {
         } else {
             _canvas_status->drawString("Connected!", 266, 30);
         }
-        _canvas_status->pushCanvas(4, 40, UPDATE_MODE_GL16);
+        _canvas_status->pushCanvas(4, 72, UPDATE_MODE_GL16);
     }
 
     if (_scanning && g_ble_scan_result >= 0) {
