@@ -2,6 +2,7 @@
 #include <map>
 #include <list>
 #include "epdgui.h"
+#include <BLEKeyboardHost.h>
 
 typedef struct {
     Frame_Base* frame;
@@ -112,6 +113,8 @@ void EPDGUI_Run(Frame_Base* frame) {
 
             M5.TP.flush();
         }
+
+        blekeyboardhost_loop();
 
         if ((last_active_time != 0) && (millis() - last_active_time > 2000)) {
             if (M5.EPD.UpdateCount() > 4) {

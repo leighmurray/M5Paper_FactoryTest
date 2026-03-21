@@ -11,7 +11,7 @@
 #define ENABLE_AUTO_POWER_SAVE true
 
 // 1分钟提醒即将关机
-static const uint32_t TIME_BEFORE_SHUTDOWN_PROMPT_MS = 60 * 1000;
+static const uint32_t TIME_BEFORE_SHUTDOWN_PROMPT_MS = 5 * 60 * 1000;
 // 显示10秒钟的关机提示
 static const uint32_t SHUTDOWN_PROMPT_DELAY_MS = 10 * 1000;
 // 最终关机时间
@@ -37,6 +37,11 @@ void SetWifi(String ssid, String password);
 String GetWifiSSID(void);
 String GetWifiPassword(void);
 uint8_t isWiFiConfiged(void);
+
+void        SetBLEPaired(const char *address, int type);
+const char *GetBLEAddress(void);
+int         GetBLEType(void);
+bool        isBLEPaired(void);
 bool SyncNTPTime(void);
 int8_t GetTimeZone(void);
 void SetTimeZone(int8_t time_zone);

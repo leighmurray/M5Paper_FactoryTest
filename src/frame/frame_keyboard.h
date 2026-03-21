@@ -12,12 +12,15 @@ class Frame_Keyboard : public Frame_Base {
     int init(epdgui_args_vector_t &args);
 
    private:
+    void UpdateBLEKeyboardState(bool bleConnected);
+
     EPDGUI_Textbox *inputbox;
     EPDGUI_Keyboard *keyboard;
     EPDGUI_Button *key_textclear;
     EPDGUI_Button *key_textsize_plus;
     EPDGUI_Button *key_textsize_reset;
     EPDGUI_Button *key_textsize_minus;
+    bool _ble_was_connected;
 };
 
 #endif  //_FRAME_KEYBOARD_H_

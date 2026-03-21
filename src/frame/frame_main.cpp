@@ -7,6 +7,7 @@
 #include "frame_fileindex.h"
 #include "frame_compare.h"
 #include "frame_home.h"
+#include "frame_bluetoothscan.h"
 
 enum {
     kKeyFactoryTest = 0,
@@ -16,7 +17,8 @@ enum {
     kKeySDFile,
     kKeyCompare,
     kKeyHome,
-    kKeyLifeGame
+    kKeyLifeGame,
+    kKeyBTScan
 };
 
 #define KEY_W 92
@@ -98,6 +100,16 @@ void key_home_cb(epdgui_args_vector_t &args) {
     *((int *)(args[0])) = 0;
 }
 
+void key_btscan_cb(epdgui_args_vector_t &args) {
+    Frame_Base *frame = EPDGUI_GetFrame("Frame_BluetoothScan");
+    if (frame == NULL) {
+        frame = new Frame_BluetoothScan();
+        EPDGUI_AddFrame("Frame_BluetoothScan", frame);
+    }
+    EPDGUI_PushFrame(frame);
+    *((int *)(args[0])) = 0;
+}
+
 Frame_Main::Frame_Main(void) : Frame_Base(false) {
     _frame_name = "Frame_Main";
     _frame_id   = 1;
@@ -118,6 +130,8 @@ Frame_Main::Frame_Main(void) : Frame_Base(false) {
         _key[i + 4] =
             new EPDGUI_Button("测试", 20 + i * 136, 240, KEY_W, KEY_H);
     }
+
+    _key[kKeyBTScan] = new EPDGUI_Button("BT", 20, 390, KEY_W, KEY_H);
 
     _key[kKeySetting]->CanvasNormal()->pushImage(
         0, 0, 92, 92, ImageResource_main_icon_setting_92x92);
@@ -190,12 +204,20 @@ Frame_Main::Frame_Main(void) : Frame_Base(false) {
                             (void *)(&_is_run));
     _key[kKeyHome]->Bind(EPDGUI_Button::EVENT_RELEASED, key_home_cb);
 
+    _key[kKeyBTScan]->CanvasNormal()->pushImage(
+        0, 0, 92, 92, ImageResource_main_icon_bluetooth_92x92);
+    *(_key[kKeyBTScan]->CanvasPressed()) = *(_key[kKeyBTScan]->CanvasNormal());
+    _key[kKeyBTScan]->CanvasPressed()->ReverseColor();
+    _key[kKeyBTScan]->AddArgs(EPDGUI_Button::EVENT_RELEASED, 0,
+                              (void *)(&_is_run));
+    _key[kKeyBTScan]->Bind(EPDGUI_Button::EVENT_RELEASED, key_btscan_cb);
+
     _time             = 0;
     _next_update_time = 0;
 }
 
 Frame_Main::~Frame_Main(void) {
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 9; i++) {
         delete _key[i];
     }
 }
@@ -241,6 +263,10 @@ void Frame_Main::AppName(m5epd_update_mode_t mode) {
         _names->drawString("LifeGame", 20 + 46 + 3 * 136, 16);
     }
     _names->pushCanvas(0, 337, mode);
+
+    _names->fillCanvas(0);
+    _names->drawString("BT Scan", 20 + 46, 16);
+    _names->pushCanvas(0, 488, mode);
 }
 
 void Frame_Main::StatusBar(m5epd_update_mode_t mode) {
@@ -294,7 +320,7 @@ void Frame_Main::StatusBar(m5epd_update_mode_t mode) {
 int Frame_Main::init(epdgui_args_vector_t &args) {
     _is_run = 1;
     M5.EPD.WriteFullGram4bpp(GetWallpaper());
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 9; i++) {
         EPDGUI_AddObject(_key[i]);
     }
     _time             = 0;

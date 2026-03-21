@@ -38,6 +38,9 @@ uint8_t global_time_synced      = false;
 uint8_t global_ttf_file_loaded  = false;
 uint8_t global_init_status      = 0xFF;
 int8_t global_timezone          = 8;
+static char global_ble_address[30] = {0};
+static int  global_ble_type        = 0;
+static bool global_ble_paired      = false;
 
 int8_t GetTimeZone(void) {
     return global_timezone;
@@ -131,6 +134,18 @@ esp_err_t LoadSetting(void) {
     NVS_CHECK(nvs_get_str(nvs_arg, "pswd", buf, &length));
     global_wifi_password = String(buf);
     global_wifi_configed = true;
+
+    char ble_addr_buf[30] = {0};
+    size_t ble_addr_len = sizeof(ble_addr_buf);
+    if (nvs_get_str(nvs_arg, "ble_addr", ble_addr_buf, &ble_addr_len) == ESP_OK
+            && ble_addr_buf[0] != '\0') {
+        strncpy(global_ble_address, ble_addr_buf, sizeof(global_ble_address));
+        int32_t ble_type_val = 0;
+        nvs_get_i32(nvs_arg, "ble_type", &ble_type_val);
+        global_ble_type   = (int)ble_type_val;
+        global_ble_paired = true;
+    }
+
     nvs_close(nvs_arg);
     return ESP_OK;
 }
@@ -166,6 +181,23 @@ String GetWifiSSID(void) {
 String GetWifiPassword(void) {
     return global_wifi_password;
 }
+
+void SetBLEPaired(const char *address, int type) {
+    strncpy(global_ble_address, address, sizeof(global_ble_address));
+    global_ble_type   = type;
+    global_ble_paired = true;
+    nvs_handle_t handle;
+    if (nvs_open("Setting", NVS_READWRITE, &handle) == ESP_OK) {
+        nvs_set_str(handle, "ble_addr", address);
+        nvs_set_i32(handle, "ble_type", (int32_t)type);
+        nvs_commit(handle);
+        nvs_close(handle);
+    }
+}
+
+const char *GetBLEAddress(void) { return global_ble_address; }
+int         GetBLEType(void)    { return global_ble_type; }
+bool        isBLEPaired(void)   { return global_ble_paired; }
 
 bool SyncNTPTime(void) {
     const char *ntpServer    = "time.cloudflare.com";

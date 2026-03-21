@@ -5,6 +5,11 @@
 #include "global_setting.h"
 #include "resources/binaryttf.h"
 #include <WiFi.h>
+#include <BLEKeyboardHost.h>
+#include <BLEClient.h>
+
+volatile int g_ble_scan_result  = -1;
+String       g_ble_chars_pending = "";
 
 M5EPD_Canvas _initcanvas(&M5.EPD);
 
@@ -130,6 +135,28 @@ void SysInit_Start(void) {
 
     _initcanvas.createRender(26, 128);
 
+    // BLE keyboard host init
+    {
+        static KeyboardDisplay ble_display;
+        ble_display.setup    = []() {};
+        ble_display.loop     = []() {};
+        ble_display.core     = []() -> int { return 0; };
+        ble_display.onKey    = [](int key, bool pressed, int /*index*/) {
+            if (pressed && key > 0 && key < 128) {
+                g_ble_chars_pending += (char)key;
+            }
+        };
+        ble_display.onReport = [](uint8_t /*modifier*/, uint8_t /*reserved*/, uint8_t * /*keycodes*/) {};
+        blekeyboardhost_setDisplay(ble_display);
+        blekeyboardhost_onPaired([](const char *address, int type) {
+            SetBLEPaired(address, type);
+        });
+        blekeyboardhost_begin("M5PaperBT",
+            isBLEPaired() ? GetBLEAddress() : nullptr,
+            GetBLEType());
+        BLEClient_onScan([](int count) { g_ble_scan_result = count; });
+    }
+
     Frame_Main *frame_main = new Frame_Main();
     EPDGUI_PushFrame(frame_main);
     Frame_FactoryTest *frame_factorytest = new Frame_FactoryTest();
@@ -154,6 +181,8 @@ void SysInit_Start(void) {
         EPDGUI_AddFrame("Frame_Compare", frame_compare);
         Frame_Home *frame_home = new Frame_Home();
         EPDGUI_AddFrame("Frame_Home", frame_home);
+        Frame_BluetoothScan *frame_btscan = new Frame_BluetoothScan();
+        EPDGUI_AddFrame("Frame_BluetoothScan", frame_btscan);
 
         if (isWiFiConfiged()) {
             SysInit_UpdateInfo("Connect to " + GetWifiSSID() + "...");
