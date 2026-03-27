@@ -2,7 +2,7 @@
 #include "WiFi.h"
 
 #define POS_LX (15)
-#define POS_RX (240 - 15)
+#define POS_RX (480 - 15)
 
 const uint8_t kPins[6] = {32, 25, 33, 26, 19, 18};
 
@@ -21,8 +21,8 @@ Frame_FactoryTest::Frame_FactoryTest(void) {
     _canvas_btn  = new M5EPD_Canvas(&M5.EPD);
     _canvas_pass = new M5EPD_Canvas(&M5.EPD);
 
-    _canvas_base->createCanvas(300, 600);
-    _canvas_data->createCanvas(240, 480);
+    _canvas_base->createCanvas(480, 420);
+    _canvas_data->createCanvas(480, 420);
     _canvas_pos->createCanvas(240, 60);
     _canvas_btn->createCanvas(240, 60);
     _canvas_pass->createCanvas(150, 32);
@@ -42,13 +42,13 @@ Frame_FactoryTest::Frame_FactoryTest(void) {
     _language = GetLanguage();
     if (_language == LANGUAGE_JA) {
         exitbtn("ホーム");
-        _canvas_title->drawString("工場テスト", 270, 34);
+        _canvas_title->drawString("工場テスト", 480, 34);
     } else if (_language == LANGUAGE_ZH) {
         exitbtn("主页");
-        _canvas_title->drawString("出厂测试", 270, 34);
+        _canvas_title->drawString("出厂测试", 480, 34);
     } else {
         exitbtn("Home");
-        _canvas_title->drawString("Factory Test", 270, 34);
+        _canvas_title->drawString("Factory Test", 480, 34);
     }
 
     _key_exit->AddArgs(EPDGUI_Button::EVENT_RELEASED, 0, (void *)(&_is_run));
@@ -103,63 +103,63 @@ void Frame_FactoryTest::drawItem(uint16_t flag, const char *str, int y) {
         _canvas_base->drawString(prefix_pass + str, POS_LX, y);
     } else {
         _canvas_base->drawString(str, POS_LX, y);
-        _canvas_base->ReversePartColor(0, y - 30, 300, 60);
+        _canvas_base->ReversePartColor(0, y - 21, 480, 42);
     }
 }
 
 void Frame_FactoryTest::drawItem(m5epd_update_mode_t mode) {
     _canvas_base->fillCanvas(0);
     if (_language == LANGUAGE_JA) {
-        drawItem(0x0001, "1.期日", 30);
-        drawItem(0x0002, "2.時間", 90);
-        drawItem(0x0004, "3.温度", 150);
-        drawItem(0x0008, "4.湿度", 210);
-        drawItem(0x0010, "5.電池", 270);
-        drawItem(0x0020, "6.Wi-Fi", 330);
-        drawItem(0x0040, "7.PSRAM", 390);
-        drawItem(0x0080, "8.SDカード", 450);
-        drawItem(0x0100, "9.ボタン", 510);
-        drawItem(0x0200, "10.タッチパッド", 570);
+        drawItem(0x0001, "1.期日", 21);
+        drawItem(0x0002, "2.時間", 63);
+        drawItem(0x0004, "3.温度", 105);
+        drawItem(0x0008, "4.湿度", 147);
+        drawItem(0x0010, "5.電池", 189);
+        drawItem(0x0020, "6.Wi-Fi", 231);
+        drawItem(0x0040, "7.PSRAM", 273);
+        drawItem(0x0080, "8.SDカード", 315);
+        drawItem(0x0100, "9.ボタン", 357);
+        drawItem(0x0200, "10.タッチパッド", 399);
     } else if (_language == LANGUAGE_ZH) {
-        drawItem(0x0001, "1.日期", 30);
-        drawItem(0x0002, "2.时间", 90);
-        drawItem(0x0004, "3.温度", 150);
-        drawItem(0x0008, "4.湿度", 210);
-        drawItem(0x0010, "5.电池", 270);
-        drawItem(0x0020, "6.Wi-Fi", 330);
-        drawItem(0x0040, "7.PSRAM", 390);
-        drawItem(0x0080, "8.SD卡", 450);
-        drawItem(0x0100, "9.按键", 510);
-        drawItem(0x0200, "10.触屏", 570);
+        drawItem(0x0001, "1.日期", 21);
+        drawItem(0x0002, "2.时间", 63);
+        drawItem(0x0004, "3.温度", 105);
+        drawItem(0x0008, "4.湿度", 147);
+        drawItem(0x0010, "5.电池", 189);
+        drawItem(0x0020, "6.Wi-Fi", 231);
+        drawItem(0x0040, "7.PSRAM", 273);
+        drawItem(0x0080, "8.SD卡", 315);
+        drawItem(0x0100, "9.按键", 357);
+        drawItem(0x0200, "10.触屏", 399);
     } else {
-        drawItem(0x0001, "1.day", 30);
-        drawItem(0x0002, "2.Time", 90);
-        drawItem(0x0004, "3.Temperature", 150);
-        drawItem(0x0008, "4.Humidity", 210);
-        drawItem(0x0010, "5.Battery", 270);
-        drawItem(0x0020, "6.Wi-Fi", 330);
-        drawItem(0x0040, "7.PSRAM", 390);
-        drawItem(0x0080, "8.SD Card", 450);
-        drawItem(0x0100, "9.Button", 510);
-        drawItem(0x0200, "10.TouchPad", 570);
+        drawItem(0x0001, "1.day", 21);
+        drawItem(0x0002, "2.Time", 63);
+        drawItem(0x0004, "3.Temperature", 105);
+        drawItem(0x0008, "4.Humidity", 147);
+        drawItem(0x0010, "5.Battery", 189);
+        drawItem(0x0020, "6.Wi-Fi", 231);
+        drawItem(0x0040, "7.PSRAM", 273);
+        drawItem(0x0080, "8.SD Card", 315);
+        drawItem(0x0100, "9.Button", 357);
+        drawItem(0x0200, "10.TouchPad", 399);
     }
     _canvas_base->pushCanvas(0, 100, mode);
 }
 
 void Frame_FactoryTest::drawGrove(m5epd_update_mode_t mode) {
-    M5.EPD.WritePartGram4bpp(428, 916, 100, 40,
+    M5.EPD.WritePartGram4bpp(856, 492, 100, 40,
                              (_pass_flag & 0x0400)
                                  ? ImageResource_factory_pass_h_100x40
                                  : ImageResource_factory_port_a_100x40);
-    M5.EPD.WritePartGram4bpp(4, 848, 40, 100,
+    M5.EPD.WritePartGram4bpp(4, 380, 40, 100,
                              (_pass_flag & 0x0800)
                                  ? ImageResource_factory_pass_v_40x100
                                  : ImageResource_factory_port_b_40x100);
-    M5.EPD.WritePartGram4bpp(4, 720, 40, 100,
+    M5.EPD.WritePartGram4bpp(4, 270, 40, 100,
                              (_pass_flag & 0x1000)
                                  ? ImageResource_factory_pass_v_40x100
                                  : ImageResource_factory_port_c_40x100);
-    M5.EPD.UpdateArea(0, 720, 540, 240, mode);
+    M5.EPD.UpdateArea(0, 270, 960, 270, mode);
 }
 
 bool Frame_FactoryTest::checkGrove(int sda, int scl) {
@@ -188,7 +188,7 @@ void Frame_FactoryTest::drawPassCount(m5epd_update_mode_t mode) {
     sprintf(buf, "PASS %d/13", n);
     _canvas_pass->fillCanvas(0);
     _canvas_pass->drawString(buf, 150, 14);
-    _canvas_pass->pushCanvas(375, 28, mode);
+    _canvas_pass->pushCanvas(790, 28, mode);
 }
 
 void Frame_FactoryTest::scan(String *ssid, int32_t *rssi) {
@@ -222,7 +222,7 @@ int Frame_FactoryTest::run() {
         sprintf(buf, "X %d, Y %d", _last_x, _last_y);
         _canvas_pos->fillCanvas(0);
         _canvas_pos->drawString(buf, POS_RX, 30);
-        _canvas_pos->pushCanvas(300, 640, UPDATE_MODE_A2);
+        _canvas_pos->pushCanvas(700, 100 + 315, UPDATE_MODE_A2);
     }
 
     // BTN
@@ -255,7 +255,7 @@ int Frame_FactoryTest::run() {
     if (ispressed) {
         _canvas_btn->fillCanvas(0);
         _canvas_btn->drawString(buf, POS_RX, 30);
-        _canvas_btn->pushCanvas(300, 580, UPDATE_MODE_A2);
+        _canvas_btn->pushCanvas(700, 100 + 357, UPDATE_MODE_A2);
     }
 
     if (millis() - _time > 1000) {
@@ -282,10 +282,10 @@ int Frame_FactoryTest::run() {
         // RTC
         sprintf(buf, "%04d - %02d - %02d", date_struct.year, date_struct.mon,
                 date_struct.day);
-        _canvas_data->drawString(buf, POS_RX, 30);
+        _canvas_data->drawString(buf, POS_RX, 21);
         sprintf(buf, "%02d : %02d : %02d", time_struct.hour, time_struct.min,
                 time_struct.sec);
-        _canvas_data->drawString(buf, POS_RX, 90);
+        _canvas_data->drawString(buf, POS_RX, 63);
 
         // SHT30
         M5.SHT30.UpdateData();
@@ -312,12 +312,12 @@ int Frame_FactoryTest::run() {
             }
 
             sprintf(buf, "%.2f ℃", ctemp);
-            _canvas_data->drawString(buf, POS_RX, 150);
+            _canvas_data->drawString(buf, POS_RX, 105);
             sprintf(buf, "%d %%", (int)chumi);
-            _canvas_data->drawString(buf, POS_RX, 210);
+            _canvas_data->drawString(buf, POS_RX, 147);
         } else {
-            _canvas_data->drawString("[FAILED]", POS_RX, 150);
-            _canvas_data->drawString("[FAILED]", POS_RX, 210);
+            _canvas_data->drawString("[FAILED]", POS_RX, 105);
+            _canvas_data->drawString("[FAILED]", POS_RX, 147);
         }
 
         // Battery
@@ -330,7 +330,7 @@ int Frame_FactoryTest::run() {
         }
         float vol_f = vol / 1000.0f;
         sprintf(buf, "%.2f V", vol_f);
-        _canvas_data->drawString(buf, POS_RX, 270);
+        _canvas_data->drawString(buf, POS_RX, 189);
 
         // WiFi
         if (_isfirst) {
@@ -343,7 +343,7 @@ int Frame_FactoryTest::run() {
                 pass_flag |= 0x20;
             }
         }
-        _canvas_data->drawString(_wifistr, POS_RX, 330);
+        _canvas_data->drawString(_wifistr, POS_RX, 231);
 
         // PSRAM
         if (_isfirst) {
@@ -352,31 +352,31 @@ int Frame_FactoryTest::run() {
                 free(test_p);
                 _psram_success = true;
                 sprintf(buf, "Free %.2f KiB", ESP.getFreePsram() / 1024.0f);
-                _canvas_data->drawString(buf, POS_RX, 390);
+                _canvas_data->drawString(buf, POS_RX, 273);
                 pass_flag |= 0x40;
             } else {
                 _psram_success = false;
                 sprintf(buf, "[FAILED]");
-                _canvas_data->drawString(buf, POS_RX, 390);
+                _canvas_data->drawString(buf, POS_RX, 273);
             }
         } else {
             if (_psram_success) {
                 sprintf(buf, "Free %.2f KiB", ESP.getFreePsram() / 1024.0f);
-                _canvas_data->drawString(buf, POS_RX, 390);
+                _canvas_data->drawString(buf, POS_RX, 273);
             } else {
-                _canvas_data->drawString("[FAILED]", POS_RX, 390);
+                _canvas_data->drawString("[FAILED]", POS_RX, 273);
             }
         }
 
         // SD
         if (GetInitStatus(0)) {
             sprintf(buf, "%.2f MiB", SD.cardSize() / 1024.0f / 1024.0f);
-            _canvas_data->drawString(buf, POS_RX, 450);
+            _canvas_data->drawString(buf, POS_RX, 315);
         } else {
-            _canvas_data->drawString("[FAILED]", POS_RX, 450);
+            _canvas_data->drawString("[FAILED]", POS_RX, 315);
         }
 
-        _canvas_data->pushCanvas(300, 100, UPDATE_MODE_A2);
+        _canvas_data->pushCanvas(480, 100, UPDATE_MODE_A2);
     }
 
     //  grove

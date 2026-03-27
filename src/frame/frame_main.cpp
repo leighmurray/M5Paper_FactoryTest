@@ -37,7 +37,7 @@ void key_setting_cb(epdgui_args_vector_t &args) {
 void key_keyboard_cb(epdgui_args_vector_t &args) {
     Frame_Base *frame = EPDGUI_GetFrame("Frame_Keyboard");
     if (frame == NULL) {
-        frame = new Frame_Keyboard(0);
+        frame = new Frame_Keyboard(1);
         EPDGUI_AddFrame("Frame_Keyboard", frame);
     }
     EPDGUI_PushFrame(frame);
@@ -115,23 +115,23 @@ Frame_Main::Frame_Main(void) : Frame_Base(false) {
     _frame_id   = 1;
 
     _bar = new M5EPD_Canvas(&M5.EPD);
-    _bar->createCanvas(540, 44);
+    _bar->createCanvas(960, 44);
     _bar->setTextSize(26);
 
     _names = new M5EPD_Canvas(&M5.EPD);
-    _names->createCanvas(540, 32);
+    _names->createCanvas(960, 32);
     _names->setTextDatum(CC_DATUM);
 
-    for (int i = 0; i < 4; i++) {
-        _key[i] = new EPDGUI_Button("测试", 20 + i * 136, 90, KEY_W, KEY_H);
-    }
-
-    for (int i = 0; i < 4; i++) {
-        _key[i + 4] =
-            new EPDGUI_Button("测试", 20 + i * 136, 240, KEY_W, KEY_H);
-    }
-
-    _key[kKeyBTScan] = new EPDGUI_Button("BT", 20, 390, KEY_W, KEY_H);
+    // 3x3 landscape grid: col x=171,434,697  row y=120,260,400
+    _key[kKeyFactoryTest] = new EPDGUI_Button("测试", 171, 120, KEY_W, KEY_H);
+    _key[kKeySetting]     = new EPDGUI_Button("测试", 434, 120, KEY_W, KEY_H);
+    _key[kKeyKeyboard]    = new EPDGUI_Button("测试", 697, 120, KEY_W, KEY_H);
+    _key[kKeyWifiScan]    = new EPDGUI_Button("测试", 171, 260, KEY_W, KEY_H);
+    _key[kKeySDFile]      = new EPDGUI_Button("测试", 434, 260, KEY_W, KEY_H);
+    _key[kKeyCompare]     = new EPDGUI_Button("测试", 697, 260, KEY_W, KEY_H);
+    _key[kKeyHome]        = new EPDGUI_Button("测试", 171, 400, KEY_W, KEY_H);
+    _key[kKeyLifeGame]    = new EPDGUI_Button("测试", 434, 400, KEY_W, KEY_H);
+    _key[kKeyBTScan]      = new EPDGUI_Button("测试", 697, 400, KEY_W, KEY_H);
 
     _key[kKeySetting]->CanvasNormal()->pushImage(
         0, 0, 92, 92, ImageResource_main_icon_setting_92x92);
@@ -227,46 +227,58 @@ void Frame_Main::AppName(m5epd_update_mode_t mode) {
         _names->createRender(20, 26);
     }
     _names->setTextSize(20);
-    _names->fillCanvas(0);
     uint8_t language = GetLanguage();
-    _names->drawString("WLAN", 20 + 46 + 3 * 136, 16);
-    if (language == LANGUAGE_JA) {
-        _names->drawString("工場テスト", 20 + 46, 16);
-        _names->drawString("設定", 20 + 46 + 136, 16);
-        _names->drawString("鍵盤", 20 + 46 + 2 * 136, 16);
-    } else if (language == LANGUAGE_ZH) {
-        _names->drawString("出厂测试", 20 + 46, 16);
-        _names->drawString("设定", 20 + 46 + 136, 16);
-        _names->drawString("键盘", 20 + 46 + 2 * 136, 16);
-    } else {
-        _names->drawString("Test", 20 + 46, 16);
-        _names->drawString("Setting", 20 + 46 + 136, 16);
-        _names->drawString("Keyboard", 20 + 46 + 2 * 136, 16);
-    }
-    _names->pushCanvas(0, 186, mode);
 
+    // Row 0: y=120 icons, labels at y=216
     _names->fillCanvas(0);
     if (language == LANGUAGE_JA) {
-        _names->drawString("メモリー", 20 + 46, 16);
-        _names->drawString("刷新比較", 20 + 46 + 136, 16);
-        _names->drawString("家", 20 + 46 + 2 * 136, 16);
-        _names->drawString("ライフゲーム", 20 + 46 + 3 * 136, 16);
+        _names->drawString("工場テスト", 217, 16);
+        _names->drawString("設定", 480, 16);
+        _names->drawString("鍵盤", 743, 16);
     } else if (language == LANGUAGE_ZH) {
-        _names->drawString("存储", 20 + 46, 16);
-        _names->drawString("刷新比较", 20 + 46 + 136, 16);
-        _names->drawString("家", 20 + 46 + 2 * 136, 16);
-        _names->drawString("生命游戏", 20 + 46 + 3 * 136, 16);
+        _names->drawString("出厂测试", 217, 16);
+        _names->drawString("设置", 480, 16);
+        _names->drawString("键盘", 743, 16);
     } else {
-        _names->drawString("Storage", 20 + 46, 16);
-        _names->drawString("Compare", 20 + 46 + 136, 16);
-        _names->drawString("Home", 20 + 46 + 2 * 136, 16);
-        _names->drawString("LifeGame", 20 + 46 + 3 * 136, 16);
+        _names->drawString("Test", 217, 16);
+        _names->drawString("Setting", 480, 16);
+        _names->drawString("Keyboard", 743, 16);
     }
-    _names->pushCanvas(0, 337, mode);
+    _names->pushCanvas(0, 216, mode);
 
+    // Row 1: y=260 icons, labels at y=356
     _names->fillCanvas(0);
-    _names->drawString("BT Scan", 20 + 46, 16);
-    _names->pushCanvas(0, 488, mode);
+    if (language == LANGUAGE_JA) {
+        _names->drawString("WLAN", 217, 16);
+        _names->drawString("メモリー", 480, 16);
+        _names->drawString("刷新比較", 743, 16);
+    } else if (language == LANGUAGE_ZH) {
+        _names->drawString("WLAN", 217, 16);
+        _names->drawString("存储", 480, 16);
+        _names->drawString("刷新比较", 743, 16);
+    } else {
+        _names->drawString("WLAN", 217, 16);
+        _names->drawString("Storage", 480, 16);
+        _names->drawString("Compare", 743, 16);
+    }
+    _names->pushCanvas(0, 356, mode);
+
+    // Row 2: y=400 icons, labels at y=496
+    _names->fillCanvas(0);
+    if (language == LANGUAGE_JA) {
+        _names->drawString("家", 217, 16);
+        _names->drawString("ライフゲーム", 480, 16);
+        _names->drawString("BTスキャン", 743, 16);
+    } else if (language == LANGUAGE_ZH) {
+        _names->drawString("家", 217, 16);
+        _names->drawString("生命游戏", 480, 16);
+        _names->drawString("BT扫描", 743, 16);
+    } else {
+        _names->drawString("Home", 217, 16);
+        _names->drawString("LifeGame", 480, 16);
+        _names->drawString("BT Scan", 743, 16);
+    }
+    _names->pushCanvas(0, 496, mode);
 }
 
 void Frame_Main::StatusBar(m5epd_update_mode_t mode) {
@@ -275,13 +287,13 @@ void Frame_Main::StatusBar(m5epd_update_mode_t mode) {
     }
     char buf[20];
     _bar->fillCanvas(0);
-    _bar->drawFastHLine(0, 43, 540, 15);
+    _bar->drawFastHLine(0, 43, 960, 15);
     _bar->setTextDatum(CL_DATUM);
     _bar->drawString("M5Paper", 10, 27);
 
     // Battery
     _bar->setTextDatum(CR_DATUM);
-    _bar->pushImage(498, 8, 32, 32, ImageResource_status_bar_battery_32x32);
+    _bar->pushImage(918, 8, 32, 32, ImageResource_status_bar_battery_32x32);
     uint32_t vol = M5.getBatteryVoltage();
 
     if (vol < 3300) {
@@ -298,8 +310,8 @@ void Frame_Main::StatusBar(m5epd_update_mode_t mode) {
     }
     uint8_t px = battery * 25;
     sprintf(buf, "%d%%", (int)(battery * 100));
-    // _bar->drawString(buf, 498 - 10, 27);
-    _bar->fillRect(498 + 3, 8 + 10, px, 13, 15);
+    // _bar->drawString(buf, 918 - 10, 27);
+    _bar->fillRect(918 + 3, 8 + 10, px, 13, 15);
     // _bar->pushImage(498, 8, 32, 32, 2,
     // ImageResource_status_bar_battery_charging_32x32);
 
@@ -310,7 +322,7 @@ void Frame_Main::StatusBar(m5epd_update_mode_t mode) {
     M5.RTC.getDate(&date_struct);
     sprintf(buf, "%2d:%02d", time_struct.hour, time_struct.min);
     _bar->setTextDatum(CC_DATUM);
-    _bar->drawString(buf, 270, 27);
+    _bar->drawString(buf, 480, 27);
     _bar->pushCanvas(0, 0, mode);
 
     _time             = millis();
@@ -319,7 +331,7 @@ void Frame_Main::StatusBar(m5epd_update_mode_t mode) {
 
 int Frame_Main::init(epdgui_args_vector_t &args) {
     _is_run = 1;
-    M5.EPD.WriteFullGram4bpp(GetWallpaper());
+    M5.EPD.Clear(true);
     for (int i = 0; i < 9; i++) {
         EPDGUI_AddObject(_key[i]);
     }

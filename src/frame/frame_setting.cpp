@@ -10,7 +10,7 @@ const uint16_t kTimeZoneY = 520;
 void key_shutdown_cb(epdgui_args_vector_t &args) { Shutdown(); }
 
 void key_restart_cb(epdgui_args_vector_t &args) {
-    M5.EPD.WriteFullGram4bpp(GetWallpaper());
+    M5.EPD.Clear(true);
     M5.EPD.UpdateFull(UPDATE_MODE_GC16);
     SaveSetting();
     esp_restart();
@@ -56,14 +56,14 @@ void key_synctime_cb(epdgui_args_vector_t &args) {
             info.drawString("WLAN not connected", 150, 55);
         }
         info.pushCanvas(120, 430, UPDATE_MODE_GL16);
-        M5.EPD.WriteFullGram4bpp(GetWallpaper());
+        M5.EPD.Clear(true);
         title->pushCanvas(0, 8, UPDATE_MODE_NONE);
         tzone->pushCanvas(4, kTimeZoneY, UPDATE_MODE_NONE);
         EPDGUI_Draw(UPDATE_MODE_NONE);
         M5.EPD.UpdateFull(UPDATE_MODE_GL16);
         return;
     }
-    LoadingAnime_32x32_Start(532 - 15 - 32, 220 + 14);
+    LoadingAnime_32x32_Start(905, 220 + 14);
     bool ret = SyncNTPTime();
     log_d("SyncNTPTime Done");
     LoadingAnime_32x32_Stop();
@@ -87,7 +87,7 @@ void key_synctime_cb(epdgui_args_vector_t &args) {
         }
         info.pushCanvas(120, 430, UPDATE_MODE_GL16);
     }
-    M5.EPD.WriteFullGram4bpp(GetWallpaper());
+    M5.EPD.Clear(true);
     title->pushCanvas(0, 8, UPDATE_MODE_NONE);
     tzone->pushCanvas(4, kTimeZoneY, UPDATE_MODE_NONE);
     EPDGUI_Draw(UPDATE_MODE_NONE);
@@ -136,26 +136,26 @@ Frame_Setting::Frame_Setting(void) {
     _frame_name = "Frame_Setting";
 
     _timezone_canvas = new M5EPD_Canvas(&M5.EPD);
-    _timezone_canvas->createCanvas(540, 60);
+    _timezone_canvas->createCanvas(960, 60);
     _timezone_canvas->fillCanvas(0);
     _timezone_canvas->setTextSize(26);
     _timezone_canvas->setTextColor(15);
     _timezone_canvas->setTextDatum(CL_DATUM);
 
     uint8_t language = GetLanguage();
-    _key_wallpaper   = new EPDGUI_Button(4, 100, 532, 61);
-    _key_language    = new EPDGUI_Button(4, 160, 532, 61);
-    _key_syncntp     = new EPDGUI_Button(4, 220, 532, 61);
-    _key_restart     = new EPDGUI_Button(4, 340, 532, 61);
-    _key_shutdown    = new EPDGUI_Button(4, 400, 532, 61);
+    _key_wallpaper   = new EPDGUI_Button(4, 100, 952, 61);
+    _key_language    = new EPDGUI_Button(4, 160, 952, 61);
+    _key_syncntp     = new EPDGUI_Button(4, 220, 952, 61);
+    _key_restart     = new EPDGUI_Button(4, 340, 952, 61);
+    _key_shutdown    = new EPDGUI_Button(4, 400, 952, 61);
 
-    key_timezone_plus = new EPDGUI_Button("+", 448, kTimeZoneY, 88, 52);
+    key_timezone_plus = new EPDGUI_Button("+", 780, kTimeZoneY, 88, 52);
     String str        = String(GetTimeZone());
     if (GetTimeZone() > 0) {
         str = "+" + str;
     }
-    key_timezone_reset = new EPDGUI_Button(str, 360, kTimeZoneY, 88, 52);
-    key_timezone_minus = new EPDGUI_Button("-", 272, kTimeZoneY, 88, 52);
+    key_timezone_reset = new EPDGUI_Button(str, 680, kTimeZoneY, 88, 52);
+    key_timezone_minus = new EPDGUI_Button("-", 580, kTimeZoneY, 88, 52);
 
     key_timezone_plus->AddArgs(EPDGUI_Button::EVENT_RELEASED, 0, &_timezone);
     key_timezone_plus->AddArgs(EPDGUI_Button::EVENT_RELEASED, 1, key_timezone_reset);
@@ -181,7 +181,7 @@ Frame_Setting::Frame_Setting(void) {
                                     ImageResource_item_icon_shutdown_32x32);
         _timezone_canvas->drawString("時間帯 (UTC)", 15, 35);
         exitbtn("ホーム");
-        _canvas_title->drawString("設定", 270, 34);
+        _canvas_title->drawString("設定", 480, 34);
     } else if (language == LANGUAGE_ZH) {
         _key_wallpaper->setBMPButton("  壁纸", "\u25B6",
                                      ImageResource_item_icon_wallpaper_32x32);
@@ -193,7 +193,7 @@ Frame_Setting::Frame_Setting(void) {
         _key_shutdown->setBMPButton("  关机", "", ImageResource_item_icon_shutdown_32x32);
         _timezone_canvas->drawString("时区 (UTC)", 15, 35);
         exitbtn("主页");
-        _canvas_title->drawString("设置", 270, 34);
+        _canvas_title->drawString("设置", 480, 34);
     } else {
         _key_wallpaper->setBMPButton("  Wallpaper", "\u25B6",
                                      ImageResource_item_icon_wallpaper_32x32);
@@ -207,7 +207,7 @@ Frame_Setting::Frame_Setting(void) {
                                     ImageResource_item_icon_shutdown_32x32);
         _timezone_canvas->drawString("Time zone (UTC)", 15, 35);
         exitbtn("Home");
-        _canvas_title->drawString("Setting", 270, 34);
+        _canvas_title->drawString("Setting", 480, 34);
     }
 
     _key_exit->AddArgs(EPDGUI_Button::EVENT_RELEASED, 0, (void *)(&_is_run));
@@ -238,7 +238,7 @@ Frame_Setting::~Frame_Setting(void) {
 
 int Frame_Setting::init(epdgui_args_vector_t &args) {
     _is_run = 1;
-    M5.EPD.WriteFullGram4bpp(GetWallpaper());
+    M5.EPD.Clear(true);
     _canvas_title->pushCanvas(0, 8, UPDATE_MODE_NONE);
     _timezone_canvas->pushCanvas(0, kTimeZoneY, UPDATE_MODE_NONE);
     EPDGUI_AddObject(_key_wallpaper);

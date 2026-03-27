@@ -56,16 +56,17 @@ void key_home_air_state1_cb(epdgui_args_vector_t &args) {
 Frame_Home::Frame_Home(void) {
     _frame_name = "Frame_Home";
 
-    _sw_light1       = new EPDGUI_Switch(2, 20, 44 + 72, 228, 228);
-    _sw_light2       = new EPDGUI_Switch(2, 288, 44 + 72, 228, 228);
-    _sw_socket1      = new EPDGUI_Switch(2, 20, 324 + 72, 228, 228);
-    _sw_socket2      = new EPDGUI_Switch(2, 288, 324 + 72, 228, 228);
-    _sw_air_1        = new EPDGUI_Switch(2, 20, 604 + 72, 228, 184);
-    _sw_air_2        = new EPDGUI_Switch(2, 288, 604 + 72, 228, 184);
-    _key_air_1_plus  = new EPDGUI_Button(20 + 116, 604 + 72 + 184, 112, 44);
-    _key_air_1_minus = new EPDGUI_Button(20, 604 + 72 + 184, 116, 44);
-    _key_air_2_plus  = new EPDGUI_Button(288 + 116, 604 + 72 + 184, 112, 44);
-    _key_air_2_minus = new EPDGUI_Button(288, 604 + 72 + 184, 116, 44);
+    // 3-column landscape layout: col x=69,366,663  row y=76,308
+    _sw_light1       = new EPDGUI_Switch(2, 69,  76, 228, 228);
+    _sw_light2       = new EPDGUI_Switch(2, 366, 76, 228, 228);
+    _sw_socket1      = new EPDGUI_Switch(2, 663, 76, 228, 228);
+    _sw_socket2      = new EPDGUI_Switch(2, 69,  308, 228, 228);
+    _sw_air_1        = new EPDGUI_Switch(2, 366, 308, 228, 184);
+    _sw_air_2        = new EPDGUI_Switch(2, 663, 308, 228, 184);
+    _key_air_1_plus  = new EPDGUI_Button(366 + 116, 308 + 184, 112, 44);
+    _key_air_1_minus = new EPDGUI_Button(366, 308 + 184, 116, 44);
+    _key_air_2_plus  = new EPDGUI_Button(663 + 116, 308 + 184, 112, 44);
+    _key_air_2_minus = new EPDGUI_Button(663, 308 + 184, 116, 44);
 
     _key_air_1_plus->SetCustomString("1");
     _key_air_1_minus->SetCustomString("0");
@@ -230,13 +231,13 @@ Frame_Home::Frame_Home(void) {
 
     if (language == LANGUAGE_JA) {
         exitbtn("ホーム");
-        _canvas_title->drawString("コントロールパネル", 270, 34);
+        _canvas_title->drawString("コントロールパネル", 480, 34);
     } else if (language == LANGUAGE_ZH) {
         exitbtn("主页");
-        _canvas_title->drawString("控制面板", 270, 34);
+        _canvas_title->drawString("控制面板", 480, 34);
     } else {
         exitbtn("Home");
-        _canvas_title->drawString("Control Panel", 270, 34);
+        _canvas_title->drawString("Control Panel", 480, 34);
     }
 
     _key_exit->AddArgs(EPDGUI_Button::EVENT_RELEASED, 0, (void *)(&_is_run));

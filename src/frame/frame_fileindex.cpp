@@ -48,7 +48,7 @@ Frame_FileIndex::Frame_FileIndex(String path) {
         } else {
             exitbtn("Home");
         }
-        _canvas_title->drawString("SD/", 540 - 15, 34);
+        _canvas_title->drawString("SD/", 960 - 15, 34);
     } else {
         String parent_directory = path.substring(0, path.lastIndexOf("/"));
 
@@ -57,7 +57,7 @@ Frame_FileIndex::Frame_FileIndex(String path) {
         if (path.length() > 20) {
             subpath = path.substring(0, 20) + "...";
         }
-        _canvas_title->drawString("SD" + subpath, 540 - 15, 34);
+        _canvas_title->drawString("SD" + subpath, 960 - 15, 34);
     }
 
     _key_exit->AddArgs(EPDGUI_Button::EVENT_RELEASED, 0, (void *)(&_is_run));
@@ -91,7 +91,7 @@ void Frame_FileIndex::listDir(fs::FS &fs, const char *dirname) {
             break;
         }
         EPDGUI_Button *btn =
-            new EPDGUI_Button(4, 100 + _key_files.size() * 60, 532, 61);
+            new EPDGUI_Button(4, 100 + _key_files.size() * 60, 952, 61);
         _key_files.push_back(btn);
 
         String filename = floders[n];
@@ -100,7 +100,7 @@ void Frame_FileIndex::listDir(fs::FS &fs, const char *dirname) {
             filename = filename.substring(0, 19) + "...";
         }
         btn->CanvasNormal()->fillCanvas(0);
-        btn->CanvasNormal()->drawRect(0, 0, 532, 61, 15);
+        btn->CanvasNormal()->drawRect(0, 0, 952, 61, 15);
         btn->CanvasNormal()->setTextSize(26);
         btn->CanvasNormal()->setTextDatum(CL_DATUM);
         btn->CanvasNormal()->setTextColor(15);
@@ -109,7 +109,7 @@ void Frame_FileIndex::listDir(fs::FS &fs, const char *dirname) {
         btn->CanvasNormal()->setTextDatum(CR_DATUM);
         btn->CanvasNormal()->pushImage(
             15, 14, 32, 32, ImageResource_item_icon_file_floder_32x32);
-        btn->CanvasNormal()->pushImage(532 - 15 - 32, 14, 32, 32,
+        btn->CanvasNormal()->pushImage(905, 14, 32, 32,
                                        ImageResource_item_icon_arrow_r_32x32);
         *(btn->CanvasPressed()) = *(btn->CanvasNormal());
         btn->CanvasPressed()->ReverseColor();
@@ -124,7 +124,7 @@ void Frame_FileIndex::listDir(fs::FS &fs, const char *dirname) {
             break;
         }
         EPDGUI_Button *btn =
-            new EPDGUI_Button(4, 100 + _key_files.size() * 60, 532, 61);
+            new EPDGUI_Button(4, 100 + _key_files.size() * 60, 952, 61);
         _key_files.push_back(btn);
 
         String filename = files[n].first;
@@ -133,7 +133,7 @@ void Frame_FileIndex::listDir(fs::FS &fs, const char *dirname) {
             filename = filename.substring(0, 19) + "...";
         }
         btn->CanvasNormal()->fillCanvas(0);
-        btn->CanvasNormal()->drawRect(0, 0, 532, 61, 15);
+        btn->CanvasNormal()->drawRect(0, 0, 952, 61, 15);
         btn->CanvasNormal()->setTextSize(26);
         btn->CanvasNormal()->setTextDatum(CL_DATUM);
         btn->CanvasNormal()->setTextColor(15);
@@ -168,7 +168,7 @@ void Frame_FileIndex::listDir(fs::FS &fs, const char *dirname) {
         size_t filesize = files[n].second;
         char buf[50];
         sprintf(buf, "%.2f KiB", filesize / 1024.0f);
-        btn->CanvasNormal()->drawString(buf, 532 - 15, 35);
+        btn->CanvasNormal()->drawString(buf, 937, 35);
         *(btn->CanvasPressed()) = *(btn->CanvasNormal());
         btn->CanvasPressed()->ReverseColor();
     }
@@ -187,7 +187,7 @@ int Frame_FileIndex::init(epdgui_args_vector_t &args) {
         listDir(SD, _path.c_str());
     }
 
-    M5.EPD.WriteFullGram4bpp(GetWallpaper());
+    M5.EPD.Clear(true);
     _canvas_title->pushCanvas(0, 8, UPDATE_MODE_NONE);
     EPDGUI_AddObject(_key_exit);
 

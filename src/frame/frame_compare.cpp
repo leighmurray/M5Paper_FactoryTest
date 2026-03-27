@@ -3,7 +3,7 @@
 void UpdateCompareCanvasDraw(uint8_t mode, M5EPD_Canvas *update_canvas) {
     update_canvas->fillCanvas(0);
     for (int i = 0; i < 16; i++) {
-        update_canvas->fillRect(i * 27, 0, 27, 50, i);
+        update_canvas->fillRect(i * 27, 0, 27, 26, i);
     }
     switch (mode) {
         case UPDATE_MODE_INIT: {
@@ -39,7 +39,7 @@ void UpdateCompareCanvasDraw(uint8_t mode, M5EPD_Canvas *update_canvas) {
             break;
         }
     }
-    update_canvas->drawRect(0, 0, 432, 100, 15);
+    update_canvas->drawRect(0, 0, 432, 52, 15);
 }
 
 void key_update_mode_cb(epdgui_args_vector_t &args) {
@@ -50,17 +50,17 @@ void key_update_mode_cb(epdgui_args_vector_t &args) {
     UpdateCompareCanvasDraw(mode, canvas);
     canvas_time->fillCanvas(0);
     uint32_t time = millis();
-    canvas->pushCanvas(104, 168 + (mode - 1) * 108, (m5epd_update_mode_t)mode);
+    canvas->pushCanvas(104, 168 + (mode - 1) * 52, (m5epd_update_mode_t)mode);
     M5.EPD.CheckAFSR();
     char buf[30];
     sprintf(buf, "%lu ms", millis() - time);
     canvas_time->drawString(buf, 200, 15);
-    canvas_time->pushCanvas(330, 925, UPDATE_MODE_GL16);
+    canvas_time->pushCanvas(600, 490, UPDATE_MODE_GL16);
 }
 
 void key_update_reset_cb(epdgui_args_vector_t &args) {
-    M5.EPD.FillPartGram4bpp(104, 168, 432, 748, 0xFFFF);
-    M5.EPD.UpdateArea(104, 168, 432, 748, UPDATE_MODE_INIT);
+    M5.EPD.FillPartGram4bpp(104, 168, 432, 364, 0xFFFF);
+    M5.EPD.UpdateArea(104, 168, 432, 364, UPDATE_MODE_INIT);
 }
 
 Frame_Compare::Frame_Compare(void) {
@@ -68,7 +68,7 @@ Frame_Compare::Frame_Compare(void) {
 
     _canvas_time = new M5EPD_Canvas(&M5.EPD);
     _canvas      = new M5EPD_Canvas(&M5.EPD);
-    _canvas->createCanvas(432, 100);
+    _canvas->createCanvas(432, 52);
     _canvas_time->createCanvas(200, 30);
     _canvas->setTextSize(26);
     _canvas_time->setTextSize(26);
@@ -77,19 +77,19 @@ Frame_Compare::Frame_Compare(void) {
     uint8_t language = GetLanguage();
     if (language == LANGUAGE_JA) {
         exitbtn("ホーム");
-        _canvas_title->drawString("比較", 270, 34);
+        _canvas_title->drawString("比較", 480, 34);
         _key_updatemode[UPDATE_MODE_INIT] =
-            new EPDGUI_Button("リセット", 4, 88, 532, 60);
+            new EPDGUI_Button("リセット", 4, 88, 952, 60);
     } else if (language == LANGUAGE_ZH) {
         exitbtn("主页");
-        _canvas_title->drawString("比较", 270, 34);
+        _canvas_title->drawString("比较", 480, 34);
         _key_updatemode[UPDATE_MODE_INIT] =
-            new EPDGUI_Button("全部重置", 4, 88, 532, 60);
+            new EPDGUI_Button("全部重置", 4, 88, 952, 60);
     } else {
         exitbtn("Home");
-        _canvas_title->drawString("Compare", 270, 34);
+        _canvas_title->drawString("Compare", 480, 34);
         _key_updatemode[UPDATE_MODE_INIT] =
-            new EPDGUI_Button("Reset all", 4, 88, 532, 60);
+            new EPDGUI_Button("Reset all", 4, 88, 952, 60);
     }
 
     _key_updatemode[UPDATE_MODE_INIT]->Bind(EPDGUI_Button::EVENT_RELEASED,
@@ -97,7 +97,7 @@ Frame_Compare::Frame_Compare(void) {
 
     for (int i = 1; i < 8; i++) {
         _key_updatemode[i] =
-            new EPDGUI_Button(0, 168 + (i - 1) * 108, 100, 100);
+            new EPDGUI_Button(0, 168 + (i - 1) * 52, 100, 52);
         char buf[10];
         sprintf(buf, "%d", i);
         _key_updatemode[i]->SetCustomString(buf);
@@ -136,7 +136,7 @@ int Frame_Compare::run() {
             _update_flag = 0;
             for (int i = 1; i < 8; i++) {
                 UpdateCompareCanvasDraw(i, _canvas);
-                _canvas->pushCanvas(104, 168 + (i - 1) * 108,
+                _canvas->pushCanvas(104, 168 + (i - 1) * 52,
                                     (m5epd_update_mode_t)i);
             }
             break;

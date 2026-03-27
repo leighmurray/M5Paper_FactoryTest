@@ -21,6 +21,7 @@ class Frame_BluetoothScan : public Frame_Base {
     uint8_t _language;
     bool _scanning;
     bool _connecting;
+    bool _auto_connect_pending;
 };
 
 #endif  //_FRAME_BLUETOOTHSCAN_H_

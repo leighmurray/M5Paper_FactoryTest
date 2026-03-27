@@ -28,7 +28,7 @@ void WaitForUser(void) {
 
 void Screen_Test(void) {
     Serial.println("Start Screen Life Test...");
-    _initcanvas.createCanvas(540, 960);
+    _initcanvas.createCanvas(960, 540);
     _initcanvas.setTextSize(4);
     delay(1000);
     float min = 0;
@@ -77,8 +77,8 @@ void SysInit_Start(void) {
     M5.EPD.begin(M5EPD_SCK_PIN, M5EPD_MOSI_PIN, M5EPD_MISO_PIN, M5EPD_CS_PIN,
                  M5EPD_BUSY_PIN);
     M5.EPD.Clear(true);
-    M5.EPD.SetRotation(M5EPD_Driver::ROTATE_90);
-    M5.TP.SetRotation(GT911::ROTATE_90);
+    M5.EPD.SetRotation(M5EPD_Driver::ROTATE_0);
+    M5.TP.SetRotation(GT911::ROTATE_0);
 
     if (!digitalRead(39)) {
         delay(10);
@@ -148,12 +148,14 @@ void SysInit_Start(void) {
         };
         ble_display.onReport = [](uint8_t /*modifier*/, uint8_t /*reserved*/, uint8_t * /*keycodes*/) {};
         blekeyboardhost_setDisplay(ble_display);
-        blekeyboardhost_onPaired([](const char *address, int type) {
+        blekeyboardhost_onPaired([](const char *address, int type, const char *name) {
             SetBLEPaired(address, type);
+            SetBLEDeviceName(name);
         });
         blekeyboardhost_begin("M5PaperBT",
             isBLEPaired() ? GetBLEAddress() : nullptr,
-            GetBLEType());
+            GetBLEType(),
+            GetBLEDeviceName());
         BLEClient_onScan([](int count) { g_ble_scan_result = count; });
     }
 
@@ -169,7 +171,7 @@ void SysInit_Start(void) {
         EPDGUI_AddFrame("Frame_Setting_Wallpaper", frame_wallpaper);
         Frame_Setting_Language *frame_language = new Frame_Setting_Language();
         EPDGUI_AddFrame("Frame_Setting_Language", frame_language);
-        Frame_Keyboard *frame_keyboard = new Frame_Keyboard(0);
+        Frame_Keyboard *frame_keyboard = new Frame_Keyboard(1);
         EPDGUI_AddFrame("Frame_Keyboard", frame_keyboard);
         Frame_WifiScan *frame_wifiscan = new Frame_WifiScan();
         EPDGUI_AddFrame("Frame_WifiScan", frame_wifiscan);
@@ -219,7 +221,7 @@ void SysInit_Start(void) {
 }
 
 void SysInit_Loading(void *pvParameters) {
-    const uint16_t kPosy = 548;
+    const uint16_t kPosy = 380;
     const uint8_t *kLD[] = {
         ImageResource_loading_01_96x96, ImageResource_loading_02_96x96,
         ImageResource_loading_03_96x96, ImageResource_loading_04_96x96,
@@ -233,13 +235,13 @@ void SysInit_Loading(void *pvParameters) {
     M5EPD_Canvas LoadingIMG(&M5.EPD);
     M5EPD_Canvas Info(&M5.EPD);
     LoadingIMG.createCanvas(96, 96);
-    Info.createCanvas(540, 50);
+    Info.createCanvas(960, 50);
     Info.setFreeFont(FF18);
     Info.setTextSize(1);
     Info.setTextDatum(CC_DATUM);
     Info.setTextColor(15);
 
-    M5.EPD.WritePartGram4bpp(92, 182, 356, 300, ImageResource_logo_356x300);
+    M5.EPD.WritePartGram4bpp(302, 70, 356, 300, ImageResource_logo_356x300);
     M5.EPD.UpdateFull(UPDATE_MODE_GC16);
 
     int i = 0;
@@ -250,7 +252,7 @@ void SysInit_Loading(void *pvParameters) {
         if (millis() - time > 250) {
             time = millis();
             LoadingIMG.pushImage(0, 0, 96, 96, kLD[i]);
-            LoadingIMG.pushCanvas(220, kPosy + 80, UPDATE_MODE_DU4);
+            LoadingIMG.pushCanvas(432, kPosy + 50, UPDATE_MODE_DU4);
             i++;
             if (i == 16) {
                 i = 0;
@@ -263,12 +265,12 @@ void SysInit_Loading(void *pvParameters) {
             if (str.indexOf("$OK") >= 0) {
                 LoadingIMG.pushImage(0, 0, 96, 96,
                                      ImageResource_loading_success_96x96);
-                LoadingIMG.pushCanvas(220, kPosy + 80, UPDATE_MODE_GL16);
+                LoadingIMG.pushCanvas(432, kPosy + 50, UPDATE_MODE_GL16);
                 break;
             } else if (str.indexOf("$ERR") >= 0) {
                 LoadingIMG.pushImage(0, 0, 96, 96,
                                      ImageResource_loading_error_96x96);
-                LoadingIMG.pushCanvas(220, kPosy + 80, UPDATE_MODE_GL16);
+                LoadingIMG.pushCanvas(432, kPosy + 50, UPDATE_MODE_GL16);
                 LoadingIMG.fillCanvas(0);
                 while (1) {
                     if (xQueueReceive(xQueue_Info, &p, 0)) {
@@ -283,7 +285,7 @@ void SysInit_Loading(void *pvParameters) {
                 }
             } else {
                 Info.fillCanvas(0);
-                Info.drawString(str, 270, 20);
+                Info.drawString(str, 480, 20);
                 Info.pushCanvas(0, kPosy, UPDATE_MODE_DU);
             }
         }

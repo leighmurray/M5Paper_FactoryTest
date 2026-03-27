@@ -37,13 +37,13 @@ Frame_WifiPassword::Frame_WifiPassword(bool isHorizontal) : Frame_Base() {
 
     if (language == LANGUAGE_JA) {
         exitbtn("WLAN");
-        _canvas_title->drawString("パスワード", 270, 34);
+        _canvas_title->drawString("パスワード", 480, 34);
     } else if (language == LANGUAGE_ZH) {
         exitbtn("无线局域网", 200);
-        _canvas_title->drawString("密码", 270, 34);
+        _canvas_title->drawString("密码", 480, 34);
     } else {
         exitbtn("WLAN");
-        _canvas_title->drawString("Password", 270, 34);
+        _canvas_title->drawString("Password", 480, 34);
     }
 
     _key_exit->AddArgs(EPDGUI_Button::EVENT_RELEASED, 0, (void *)(&_is_run));

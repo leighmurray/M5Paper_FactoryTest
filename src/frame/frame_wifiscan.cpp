@@ -30,7 +30,7 @@ Frame_WifiScan::Frame_WifiScan(void) {
     _frame_name = "Frame_WifiScan";
 
     for (int i = 0; i < MAX_BTN_NUM; i++) {
-        _key_wifi[i] = new EPDGUI_Button(4, 100 + i * 60, 532, 61);
+        _key_wifi[i] = new EPDGUI_Button(4, 100 + i * 60, 952, 61);
         _key_wifi[i]->SetHide(true);
         _key_wifi[i]->CanvasNormal()->setTextSize(26);
         _key_wifi[i]->CanvasNormal()->setTextDatum(CL_DATUM);
@@ -44,13 +44,13 @@ Frame_WifiScan::Frame_WifiScan(void) {
     _language = GetLanguage();
     if (_language == LANGUAGE_JA) {
         exitbtn("ホーム");
-        _canvas_title->drawString("WLAN", 270, 34);
+        _canvas_title->drawString("WLAN", 480, 34);
     } else if (_language == LANGUAGE_ZH) {
         exitbtn("主页");
-        _canvas_title->drawString("无线局域网", 270, 34);
+        _canvas_title->drawString("无线局域网", 480, 34);
     } else {
         exitbtn("Home");
-        _canvas_title->drawString("WLAN", 270, 34);
+        _canvas_title->drawString("WLAN", 480, 34);
     }
 
     _key_exit->AddArgs(EPDGUI_Button::EVENT_RELEASED, 0, (void *)(&_is_run));
@@ -80,10 +80,10 @@ void Frame_WifiScan::DrawItem(EPDGUI_Button *btn, String ssid, int rssi) {
     }
     btn->SetHide(false);
     btn->CanvasNormal()->fillCanvas(0);
-    btn->CanvasNormal()->drawRect(0, 0, 532, 61, 15);
+    btn->CanvasNormal()->drawRect(0, 0, 952, 61, 15);
     btn->CanvasNormal()->drawString(ssid, 15, 35);
     btn->SetCustomString(ssid);
-    btn->CanvasNormal()->pushImage(532 - 15 - 32, 14, 32, 32,
+    btn->CanvasNormal()->pushImage(905, 14, 32, 32,
                                    kIMGWifiLevel[level]);
     *(btn->CanvasPressed()) = *(btn->CanvasNormal());
     btn->CanvasPressed()->ReverseColor();
@@ -108,7 +108,7 @@ int Frame_WifiScan::scan() {
     WiFi.scanNetworks(true);
 
     if (_scan_count > 0) {
-        M5.EPD.WriteFullGram4bpp(GetWallpaper());
+        M5.EPD.Clear(true);
         _canvas_title->pushCanvas(0, 8, UPDATE_MODE_NONE);
         _key_exit->Draw(UPDATE_MODE_NONE);
         M5.EPD.UpdateFull(UPDATE_MODE_GC16);
@@ -180,7 +180,7 @@ int Frame_WifiScan::scan() {
     _key_wifi[wifi_num]->SetCustomString("_$refresh$_");
     _key_wifi[wifi_num]->SetHide(false);
     _key_wifi[wifi_num]->CanvasNormal()->fillCanvas(0);
-    _key_wifi[wifi_num]->CanvasNormal()->drawRect(0, 0, 532, 61, 15);
+    _key_wifi[wifi_num]->CanvasNormal()->drawRect(0, 0, 952, 61, 15);
     _key_wifi[wifi_num]->CanvasNormal()->pushImage(
         15, 14, 32, 32, ImageResource_item_icon_refresh_32x32);
     if (_language == LANGUAGE_JA) {
@@ -205,7 +205,7 @@ int Frame_WifiScan::scan() {
 
 void Frame_WifiScan::Connect() {
     int anime_cnt = 0;
-    int x         = 532 - 15 - 32;
+    int x         = 905;
     int y         = _connect_key->getY() + 14;
     M5EPD_Canvas loading(&M5.EPD);
     loading.createCanvas(32, 32);
@@ -249,7 +249,7 @@ void Frame_WifiScan::Connect() {
     }
 
     _connect_key->CanvasNormal()->pushImage(
-        532 - 15 - 32, 14, 32, 32, ImageResource_item_icon_success_32x32);
+        905, 14, 32, 32, ImageResource_item_icon_success_32x32);
 
     _key_wifi[0]->SetEnable(false);
     _key_wifi[0]->SetHide(false);

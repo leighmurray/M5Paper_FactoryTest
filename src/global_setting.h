@@ -39,8 +39,10 @@ String GetWifiPassword(void);
 uint8_t isWiFiConfiged(void);
 
 void        SetBLEPaired(const char *address, int type);
+void        SetBLEDeviceName(const char *name);
 const char *GetBLEAddress(void);
 int         GetBLEType(void);
+const char *GetBLEDeviceName(void);
 bool        isBLEPaired(void);
 bool SyncNTPTime(void);
 int8_t GetTimeZone(void);

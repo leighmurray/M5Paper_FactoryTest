@@ -4,10 +4,10 @@
 Frame_Base::Frame_Base(bool _has_title) {
     if (_has_title) {
         _canvas_title = new M5EPD_Canvas(&M5.EPD);
-        _canvas_title->createCanvas(540, 64);
-        _canvas_title->drawFastHLine(0, 64, 540, 15);
-        _canvas_title->drawFastHLine(0, 63, 540, 15);
-        _canvas_title->drawFastHLine(0, 62, 540, 15);
+        _canvas_title->createCanvas(960, 64);
+        _canvas_title->drawFastHLine(0, 64, 960, 15);
+        _canvas_title->drawFastHLine(0, 63, 960, 15);
+        _canvas_title->drawFastHLine(0, 62, 960, 15);
         _canvas_title->setTextSize(26);
         _canvas_title->setTextDatum(CC_DATUM);
     }
@@ -49,13 +49,13 @@ void Frame_Base::CheckAutoPowerSave() {
         if (!_shutdown_prompt_is_shown) {
             log_d("Show shutdown prompt");
             _canvas_footer = new M5EPD_Canvas(&M5.EPD);
-            _canvas_footer->createCanvas(540, footer_height);
+            _canvas_footer->createCanvas(960, footer_height);
             _canvas_footer->setTextSize(26);
             _canvas_footer->setTextDatum(CC_DATUM);
             char buf[128];
             sprintf(buf, "Shutdown to save power, touch to continue?");
-            _canvas_footer->drawString(buf, 270, footer_height / 2);
-            _canvas_footer->pushCanvas(0, 960 - footer_height - margin_bottom,
+            _canvas_footer->drawString(buf, 480, footer_height / 2);
+            _canvas_footer->pushCanvas(0, 540 - footer_height - margin_bottom,
                                        UPDATE_MODE_DU4);
             _shutdown_prompt_is_shown = true;
         }
@@ -63,7 +63,7 @@ void Frame_Base::CheckAutoPowerSave() {
         // active again and _shutdown_prompt_is_shown == true, hide prompt
         log_d("Become active again, hide prompt");
         _canvas_footer->fillCanvas(0);
-        _canvas_footer->pushCanvas(0, 960 - footer_height - margin_bottom,
+        _canvas_footer->pushCanvas(0, 540 - footer_height - margin_bottom,
                                    UPDATE_MODE_DU4);
         _shutdown_prompt_is_shown = false;
     }

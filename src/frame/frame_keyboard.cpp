@@ -42,9 +42,8 @@ void key_textsize_reset_cb(epdgui_args_vector_t &args) {
 }
 
 Frame_Keyboard::Frame_Keyboard(bool isHorizontal) : Frame_Base() {
-    _frame_name          = "Frame_Keyboard";
-    _ble_was_connected   = false;
-    uint8_t language     = GetLanguage();
+    _frame_name      = "Frame_Keyboard";
+    uint8_t language = GetLanguage();
     if (isHorizontal) {
         inputbox = new EPDGUI_Textbox(84, 25, 712, 250);
         if (language == LANGUAGE_JA)
@@ -99,13 +98,13 @@ Frame_Keyboard::Frame_Keyboard(bool isHorizontal) : Frame_Base() {
 
     if (language == LANGUAGE_JA) {
         exitbtn("ホーム");
-        _canvas_title->drawString("鍵盤", 270, 34);
+        _canvas_title->drawString("鍵盤", 480, 34);
     } else if (language == LANGUAGE_ZH) {
         exitbtn("主页");
-        _canvas_title->drawString("键盘", 270, 34);
+        _canvas_title->drawString("键盘", 480, 34);
     } else {
         exitbtn("Home");
-        _canvas_title->drawString("Keyboard", 270, 34);
+        _canvas_title->drawString("Keyboard", 480, 34);
     }
 
     _key_exit->AddArgs(EPDGUI_Button::EVENT_RELEASED, 0, (void *)(&_is_run));
@@ -121,34 +120,14 @@ Frame_Keyboard::~Frame_Keyboard() {
     delete key_textsize_minus;
 }
 
-void Frame_Keyboard::UpdateBLEKeyboardState(bool bleConnected) {
-    if (bleConnected) {
-        inputbox->SetTextMargin(8, 8, 8, 8);
-        keyboard->SetHide(true);
-    } else {
-        // bottom margin of 312 constrains text area to above the control
-        // buttons at screen y=628 (textbox-relative y=528, margin=840-528=312)
-        inputbox->SetTextMargin(8, 8, 8, 312);
-        keyboard->SetHide(false);
-    }
-    EPDGUI_Draw(UPDATE_MODE_NONE);
-    M5.EPD.UpdateFull(UPDATE_MODE_GL16);
-    _ble_was_connected = bleConnected;
-}
 
 int Frame_Keyboard::init(epdgui_args_vector_t &args) {
-    _is_run            = 1;
-    _ble_was_connected = ble_is_connected();
+    _is_run = 1;
     M5.EPD.Clear();
     _canvas_title->pushCanvas(0, 8, UPDATE_MODE_NONE);
 
-    if (_ble_was_connected) {
-        inputbox->SetTextMargin(8, 8, 8, 8);
-        keyboard->SetHide(true);
-    } else {
-        inputbox->SetTextMargin(8, 8, 8, 312);
-        keyboard->SetHide(false);
-    }
+    inputbox->SetTextMargin(8, 8, 8, 8);
+    keyboard->SetHide(true);
 
     EPDGUI_AddObject(inputbox);
     EPDGUI_AddObject(keyboard);
@@ -163,14 +142,6 @@ int Frame_Keyboard::init(epdgui_args_vector_t &args) {
 int Frame_Keyboard::run(void) {
     Frame_Base::run();
 
-    bool bleConnected = ble_is_connected();
-    if (bleConnected != _ble_was_connected) {
-        UpdateBLEKeyboardState(bleConnected);
-    }
-
-    if (!bleConnected) {
-        inputbox->AddText(keyboard->getData());
-    }
     if (g_ble_chars_pending.length() > 0) {
         EPDGUI_UpdateGlobalLastActiveTime();
         inputbox->AddText(g_ble_chars_pending);

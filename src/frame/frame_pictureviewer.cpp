@@ -11,7 +11,7 @@ Frame_PictureViewer::Frame_PictureViewer(String path) {
     _pic_path   = path;
 
     _canvas_picture = new M5EPD_Canvas(&M5.EPD);
-    _canvas_picture->createCanvas(540, 888);
+    _canvas_picture->createCanvas(960, 468);
     _canvas_picture->setTextSize(26);
     _canvas_picture->setTextColor(0);
     _canvas_picture->setTextDatum(CC_DATUM);
@@ -26,7 +26,7 @@ Frame_PictureViewer::Frame_PictureViewer(String path) {
     }
 
     _canvas_title->drawString(
-        path.substring(path.lastIndexOf("/") + 1, path.lastIndexOf(".")), 270,
+        path.substring(path.lastIndexOf("/") + 1, path.lastIndexOf(".")), 480,
         34);
 
     _key_exit->AddArgs(EPDGUI_Button::EVENT_RELEASED, 0, (void *)(&_is_run));
@@ -41,7 +41,7 @@ Frame_PictureViewer::~Frame_PictureViewer(void) {
 
 void Frame_PictureViewer::err(String info) {
     _canvas_picture->fillCanvas(0);
-    _canvas_picture->fillRect(254 - 150, 500 - 50, 300, 100, 15);
+    _canvas_picture->fillRect(480 - 150, 234 - 50, 300, 100, 15);
     _canvas_picture->drawString(info, 150, 55);
 }
 
@@ -49,7 +49,7 @@ int Frame_PictureViewer::run() {
     Frame_Base::run();
     if (_is_first) {
         _is_first = false;
-        LoadingAnime_32x32_Start(254, 500);
+        LoadingAnime_32x32_Start(464, 250);
         String suffix = _pic_path.substring(_pic_path.lastIndexOf("."));
         if ((suffix.indexOf("bmp") >= 0) || (suffix.indexOf("BMP") >= 0)) {
             bool ret =

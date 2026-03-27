@@ -26,10 +26,10 @@ Frame_txtReader::Frame_txtReader(String path) {
     _canvas_next    = new M5EPD_Canvas(&M5.EPD);
     _canvas_page    = new M5EPD_Canvas(&M5.EPD);
 
-    _key_next = new EPDGUI_Button("", 270, 72, 270, 888,
+    _key_next = new EPDGUI_Button("", 480, 72, 480, 468,
                                   EPDGUI_Button::STYLE_INVISABLE);
     _key_prev =
-        new EPDGUI_Button("", 0, 72, 270, 888, EPDGUI_Button::STYLE_INVISABLE);
+        new EPDGUI_Button("", 0, 72, 480, 468, EPDGUI_Button::STYLE_INVISABLE);
     // _key_next->AddArgs(EPDGUI_Button::EVENT_RELEASED, 0, &_key_operation);
     _key_next->Bind(EPDGUI_Button::EVENT_RELEASED, key_nextpage_released_cb);
     // _key_prev->AddArgs(EPDGUI_Button::EVENT_RELEASED, 0, &_key_operation);
@@ -45,7 +45,7 @@ Frame_txtReader::Frame_txtReader(String path) {
     }
 
     _canvas_title->drawString(
-        path.substring(path.lastIndexOf("/") + 1, path.lastIndexOf(".")), 270,
+        path.substring(path.lastIndexOf("/") + 1, path.lastIndexOf(".")), 480,
         34);
 
     _key_exit->AddArgs(EPDGUI_Button::EVENT_RELEASED, 0, (void *)(&_is_run));
@@ -68,7 +68,7 @@ Frame_txtReader::~Frame_txtReader(void) {
 uint32_t Frame_txtReader::renderText(uint32_t cursor, uint32_t length,
                                      M5EPD_Canvas *canvas) {
     canvas->fillCanvas(0);
-    canvas->setTextArea(10, 10, 520, 868);
+    canvas->setTextArea(10, 10, 940, 448);
     canvas->setTextSize(_text_size);
 
     char buf[length + 1];
@@ -82,7 +82,7 @@ uint32_t Frame_txtReader::renderText(uint32_t cursor, uint32_t length,
 int Frame_txtReader::run() {
     Frame_Base::run();
     if (_is_first) {
-        LoadingAnime_32x32_Start(254, 500);
+        LoadingAnime_32x32_Start(464, 250);
         _is_first = false;
         uint32_t cursor;
         _page_cursor.insert(std::pair<uint32_t, uint32_t>(0, 0));
@@ -164,7 +164,7 @@ int Frame_txtReader::run() {
         char buf[5];
         sprintf(buf, "%d", _page + 1);
         _canvas_page->drawString(buf, 100, 42);
-        _canvas_page->pushCanvas(440 - 15, 0, UPDATE_MODE_GL16);
+        _canvas_page->pushCanvas(845, 0, UPDATE_MODE_GL16);
     }
     return 1;
 }
@@ -173,9 +173,9 @@ int Frame_txtReader::init(epdgui_args_vector_t &args) {
     _is_run = 1;
     M5.EPD.Clear();
     _canvas_title->pushCanvas(0, 8, UPDATE_MODE_NONE);
-    _canvas_prev->createCanvas(540, 888);
-    _canvas_current->createCanvas(540, 888);
-    _canvas_next->createCanvas(540, 888);
+    _canvas_prev->createCanvas(960, 468);
+    _canvas_current->createCanvas(960, 468);
+    _canvas_next->createCanvas(960, 468);
     _canvas_page->createCanvas(100, 60);
     _canvas_page->setTextDatum(CR_DATUM);
     if (!_canvas_prev->isRenderExist(_text_size)) {

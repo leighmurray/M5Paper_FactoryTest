@@ -7,8 +7,8 @@
 
 #define CELL_W 4
 #define CELL_H 4
-#define CELL_X 135 + 2
-#define CELL_Y 222 + 2
+#define CELL_X 240 + 2
+#define CELL_Y 116 + 2
 
 // #define CELL_W 2
 // #define CELL_H 2
@@ -161,13 +161,13 @@ Frame_Lifegame::Frame_Lifegame(void) {
     uint8_t language = GetLanguage();
     if (language == LANGUAGE_JA) {
         exitbtn("ホーム");
-        _canvas_title->drawString("ライフゲーム", 270, 34);
+        _canvas_title->drawString("ライフゲーム", 480, 34);
     } else if (language == LANGUAGE_ZH) {
         exitbtn("主页");
-        _canvas_title->drawString("生命游戏", 270, 34);
+        _canvas_title->drawString("生命游戏", 480, 34);
     } else {
         exitbtn("Home");
-        _canvas_title->drawString("Life Game", 270, 34);
+        _canvas_title->drawString("Life Game", 480, 34);
     }
 
     _key_exit->AddArgs(EPDGUI_Button::EVENT_RELEASED, 0, (void *)(&_is_run));
@@ -182,15 +182,15 @@ int Frame_Lifegame::init(epdgui_args_vector_t &args) {
 
     lifegame_cells_0.createCanvas(CELL_X, CELL_Y);
     lifegame_cells_1.createCanvas(CELL_X, CELL_Y);
-    lifegame_canvas_0.createCanvas(540, 888);
-    lifegame_canvas_1.createCanvas(540, 888);
+    lifegame_canvas_0.createCanvas(960, 464);
+    lifegame_canvas_1.createCanvas(960, 464);
 
     lifegame_cells_0.fillCanvas(0);
     lifegame_cells_1.fillCanvas(0);
     lifegame_canvas_0.fillCanvas(0);
     lifegame_canvas_1.fillCanvas(0);
 
-    lifegame_cells_0.pushImage(2, 2, 132, 120,
+    lifegame_cells_0.pushImage(2, 2, 132, 114,
                                ImageResource_lifegame_seeder_132x120);
     lifegame_cells_flag = 0;
 

@@ -10,7 +10,7 @@ Frame_Setting_Wallpaper::Frame_Setting_Wallpaper(void) {
     _sw_mutex_group = new EPDGUI_MutexSwitch();
 
     for (int i = 0; i < WALLPAPER_NUM; i++) {
-        _sw_wallpapers[i] = new EPDGUI_Switch(2, 4, 100 + i * 60, 532, 61);
+        _sw_wallpapers[i] = new EPDGUI_Switch(2, 4, 100 + i * 60, 952, 61);
         _sw_mutex_group->Add(_sw_wallpapers[i]);
         _sw_wallpapers[i]->SetLabel(0, GetWallpaperName(i));
         _sw_wallpapers[i]->SetLabel(1, GetWallpaperName(i));
@@ -25,13 +25,13 @@ Frame_Setting_Wallpaper::Frame_Setting_Wallpaper(void) {
     uint8_t language = GetLanguage();
     if (language == LANGUAGE_JA) {
         exitbtn("設定");
-        _canvas_title->drawString("壁紙", 270, 34);
+        _canvas_title->drawString("壁紙", 480, 34);
     } else if (language == LANGUAGE_ZH) {
         exitbtn("设置");
-        _canvas_title->drawString("壁纸", 270, 34);
+        _canvas_title->drawString("壁纸", 480, 34);
     } else {
         exitbtn("Setting");
-        _canvas_title->drawString("Wallpaper", 270, 34);
+        _canvas_title->drawString("Wallpaper", 480, 34);
     }
 
     _key_exit->AddArgs(EPDGUI_Button::EVENT_RELEASED, 0, (void *)(&_is_run));
@@ -47,7 +47,7 @@ Frame_Setting_Wallpaper::~Frame_Setting_Wallpaper(void) {
 
 int Frame_Setting_Wallpaper::init(epdgui_args_vector_t &args) {
     _is_run = 1;
-    M5.EPD.WriteFullGram4bpp(GetWallpaper());
+    M5.EPD.Clear(true);
     _canvas_title->pushCanvas(0, 8, UPDATE_MODE_NONE);
     EPDGUI_AddObject(_sw_mutex_group);
     EPDGUI_AddObject(_key_exit);
